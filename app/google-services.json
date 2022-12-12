@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "828067310873",
+    "project_id": "jeksonchat",
+    "storage_bucket": "jeksonchat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:828067310873:android:3b39e8fbac0017eb0e2988",
+        "android_client_info": {
+          "package_name": "com.example.jeksonchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "828067310873-pmbr7q65dc49otf6amgaisvnprrvlipu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOakD-WHOyMWBAjwhDowPhf5OZcH3NJK0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "828067310873-pmbr7q65dc49otf6amgaisvnprrvlipu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
