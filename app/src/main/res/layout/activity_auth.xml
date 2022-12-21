@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="vm"
+            type="com.example.jeksonchat.presentation.ui.auth.AuthViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".presentation.ui.auth.AuthActivity">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/startGuidLine"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/endGuidLine"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvProposeToLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="24dp"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@id/etLogin"
+            app:layout_constraintEnd_toEndOf="@id/endGuidLine"
+            app:layout_constraintStart_toStartOf="@id/startGuidLine"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="SIGN UP" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etLogin"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:endIconMode="clear_text"
+            app:error='@{vm.isETLoginError ? @string/value_not_email : ""}'
+            app:errorEnabled="true"
+            app:errorIconDrawable="@null"
+            app:layout_constraintBottom_toTopOf="@+id/etUserName"
+            app:layout_constraintEnd_toEndOf="@id/endGuidLine"
+            app:layout_constraintStart_toStartOf="@id/startGuidLine"
+            app:layout_constraintTop_toBottomOf="@id/tvProposeToLogin"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:startIconContentDescription="login"
+            app:startIconDrawable="@drawable/ic_login_icon">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEditLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:afterTextChanged="@{(text) -> vm.onLoginTextChanged(text)}"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etUserName"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="@{vm.isSignUpPage ? View.VISIBLE : View.GONE}"
+            app:endIconMode="clear_text"
+            app:error='@{vm.isETUserNameError ? @string/user_name_not_set : ""}'
+            app:errorEnabled="true"
+            app:layout_constraintBottom_toTopOf="@id/etPassword"
+            app:layout_constraintEnd_toEndOf="@id/endGuidLine"
+            app:layout_constraintStart_toStartOf="@id/startGuidLine"
+            app:layout_constraintTop_toBottomOf="@id/etLogin"
+            app:startIconContentDescription="User name"
+            app:startIconDrawable="@drawable/ic_name_id">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEditUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:afterTextChanged="@{(text) -> vm.onNameTextChanged(text)}"
+                android:hint="@string/user_name"
+                android:inputType="textEmailAddress" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etPassword"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:error='@{vm.etPasswordError ? @string/min_length_password : ""}'
+            app:errorEnabled="true"
+            app:errorIconDrawable="@null"
+            app:layout_constraintBottom_toTopOf="@+id/etConfirmPassword"
+            app:layout_constraintEnd_toEndOf="@id/endGuidLine"
+            app:layout_constraintStart_toStartOf="@id/startGuidLine"
+            app:layout_constraintTop_toBottomOf="@id/etUserName"
+            app:passwordToggleEnabled="true"
+            app:startIconContentDescription="password"
+            app:startIconDrawable="@drawable/ic_password_icon">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEditPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:afterTextChanged="@{(text) -> vm.etPasswordTextChanged(text)}"
+                android:hint="@string/password"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etConfirmPassword"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="@{vm.isSignUpPage ? View.VISIBLE : View.GONE}"
+            app:error='@{vm.etConfirmPasswordError ? @string/value_not_match_password : ""}'
+            app:errorEnabled="true"
+            app:errorIconDrawable="@null"
+            app:layout_constraintBottom_toTopOf="@+id/btnSignIn"
+            app:layout_constraintEnd_toEndOf="@id/endGuidLine"
+            app:layout_constraintStart_toStartOf="@id/startGuidLine"
+            app:layout_constraintTop_toBottomOf="@id/etPassword"
+            app:passwordToggleEnabled="true"
+            app:startIconContentDescription="@string/confirm_password"
+            app:startIconDrawable="@drawable/ic_confirm_password_icon">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEditConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:afterTextChanged="@{(text) -> vm.etConfirmPasswordTextChanged(text)}"
+                android:hint="@string/confirm_password"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSignIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:onClick="@{() -> vm.chooseEnter()}"
+            android:text="@{vm.isSignUpPage ? @string/sign_up : @string/sign_in}"
+            android:textAllCaps="false"
+            android:visibility="@{vm.btnSignInVisibility ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintBottom_toTopOf="@id/tvSwitchLogReg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etConfirmPassword"
+            tools:text="Sign up" />
+
+        <ProgressBar
+            android:id="@+id/progressSinging"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{vm.btnSignInVisibility ? View.INVISIBLE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@+id/btnSignIn"
+            app:layout_constraintEnd_toEndOf="@+id/btnSignIn"
+            app:layout_constraintStart_toStartOf="@+id/btnSignIn"
+            app:layout_constraintTop_toTopOf="@+id/btnSignIn" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvSwitchLogReg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="32dp"
+            android:onClick="@{() -> vm.switchLogReg()}"
+            android:text="@{vm.isSignUpPage() ? @string/log_in : @string/sign_up}"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnSignIn"
+            tools:text="Sign in" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

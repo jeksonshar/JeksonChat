@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">JeksonChat</string>
+    <string name="confirm_password">confirm_password</string>
+    <string name="email">email</string>
+    <string name="user_name">User name</string>
+    <string name="password">password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="log_in">Log In</string>
+
+    <string name="email_not_filled">Email не заполнен</string>
+    <string name="email_does_not_match">email не соответзтвует форме</string>
+    <string name="passwords_not_filled">Пароли не заполнены</string>
+    <string name="passwords_does_not_match">Пароли не совпадают</string>
+    <string name="password_length_eight">Длина пароля должна быть не менее 8 символов</string>
+    <string name="user_name_not_filled">имя пользователя не заполнено</string>
+    <string name="message">Сообщение</string>
+    <string name="jekson_chat">Jekson chat</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="value_not_email">значение не является email</string>
+    <string name="user_name_not_set">Имя пользователя не задано</string>
+    <string name="min_length_password">минимальная длина пароля 8 символов</string>
+    <string name="value_not_match_password">значение не соответствует паролю</string>
 </resources>

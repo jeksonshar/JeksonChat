@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/userListFragment">
+
+    <fragment
+        android:id="@+id/userListFragment"
+        android:name="com.example.jeksonchat.presentation.ui.chat.userlist.UserListFragment"
+        android:label="@string/jekson_chat"
+        tools:layout="@layout/fragment_user_list">
+        <action
+            android:id="@+id/action_userListFragment_to_chatWithUserFragment"
+            app:destination="@id/chatWithUserFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatWithUserFragment"
+        android:name="com.example.jeksonchat.presentation.ui.chat.chatwithuser.ChatWithUserFragment"
+        android:label="{userName}"
+        tools:layout="@layout/fragment_chat_with_user">
+        <argument
+            android:name="userName"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+</navigation>

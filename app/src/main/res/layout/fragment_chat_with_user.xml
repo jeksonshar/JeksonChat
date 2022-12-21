@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+        <variable
+            name="vm"
+            type="com.example.jeksonchat.presentation.ui.chat.chatwithuser.ChatWithUserViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvChatMessages"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/textInputLayoutMessage"/>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/SendMessageStyle"
+            app:layout_constraintTop_toBottomOf="@id/rvChatMessages"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnSend"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etMessage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:afterTextChanged="@{(text) -> vm.setMessageText(text)}"
+                android:hint="@string/message" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btnSend"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            style="@style/SendMessageStyle"
+            android:paddingHorizontal="8dp"
+            android:onClick="@{() -> vm.sendMessage()}"
+            android:src="@drawable/send_icon"
+            app:layout_constraintStart_toEndOf="@id/textInputLayoutMessage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textInputLayoutMessage"
+            app:layout_constraintBottom_toBottomOf="@id/textInputLayoutMessage"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

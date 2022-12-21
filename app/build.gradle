@@ -2,6 +2,9 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
+    id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs'
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -24,12 +27,27 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+//    productFlavors {
+//        prod {
+//
+//        }
+//        prePprod {
+//
+//        }
+//    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        viewBinding true
+        dataBinding = true
     }
 }
 
@@ -39,6 +57,12 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation "androidx.fragment:fragment-ktx:1.5.5"
+    implementation 'androidx.activity:activity-ktx:1.7.0-alpha02'
+
+    implementation 'com.google.code.gson:gson:2.9.0'
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
@@ -55,7 +79,19 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
 
-    // Firebase UI Library
-    implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
-    implementation 'com.firebaseui:firebase-ui-database:8.0.2'
+    //hilt
+    implementation "com.google.dagger:hilt-android:2.44"
+    kapt "com.google.dagger:hilt-android-compiler:2.44"
+
+    //navigation component
+    def nav_version = '2.5.3'
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    // for date and calendar cases
+    implementation 'net.danlew:android.joda:2.12.1.1'
+}
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }
