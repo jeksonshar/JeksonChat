@@ -23,5 +23,13 @@
             android:name="userName"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_chatWithUserFragment_to_videoCallingFragment"
+            app:destination="@id/videoCallingFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/videoCallingFragment"
+        android:name="com.example.jeksonchat.presentation.ui.chat.videocalling.VideoCallingFragment"
+        android:label="VideoCallingFragment"
+        tools:layout="@layout/fragment_chat_video_calling"/>
 </navigation>

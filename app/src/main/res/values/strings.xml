@@ -21,4 +21,10 @@
     <string name="user_name_not_set">Имя пользователя не задано</string>
     <string name="min_length_password">минимальная длина пароля 8 символов</string>
     <string name="value_not_match_password">значение не соответствует паролю</string>
+    <string name="end_video_call">End video call</string>
+
+    <string name="agora_app_id">c61e315c4cef47cfa848c84175d70fa6</string>
+    <string name="agora_app_token">007eJxTYKiYayIwieldXGjY8WC7Kwu5J5cce3+5dn/j4VfPpp4+m8ykwJBsZphqbGiabJKcmmZinpyWaGFikWxhYmhummJukJZotnfpiuSGQEYGnYlpDIxQCOLzMJSkFpc4ZyTm5aXmGDIwAADlACRW</string>
+
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
 </resources>

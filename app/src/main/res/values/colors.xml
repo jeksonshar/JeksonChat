@@ -16,4 +16,5 @@
     <color name="background_send_message_gray_light">#e0e0e0</color>
     <color name="background_send_message_gray_dark">#2e2e2e</color>
     <color name="green_light">#D3E4CD</color>
+    <color name="red">#f22233</color>
 </resources>

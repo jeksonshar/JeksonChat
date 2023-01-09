@@ -6,13 +6,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.jeksonchat.R
 import com.example.jeksonchat.business.domain.models.User
+import com.example.jeksonchat.utils.USER_LIST_PATH
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -59,8 +62,13 @@ class AuthViewModel @Inject constructor() : ViewModel() {
     private val auth = Firebase.auth
 
     fun chooseEnter() {
-        if (isSignUpPage.value == true) signUp(auth)
-        else logIn(auth)
+        var deviseToken = "----------"
+        Firebase.messaging.token.addOnCompleteListener {
+            if (it.isSuccessful) deviseToken = it.result
+
+            if (isSignUpPage.value == true) signUp(auth, deviseToken)
+            else logIn(auth, deviseToken)
+        }
     }
 
     fun onLoginTextChanged(it: CharSequence) {
@@ -109,7 +117,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
 
     private fun checkForEmailMatch(): Boolean {
         return when {
-            email.value?.isEmpty() == true -> {
+            email.value.isNullOrEmpty() -> {
                 _resMessageForUser.value = R.string.email_not_filled
                 false
             }
@@ -166,7 +174,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    private fun logIn(auth: FirebaseAuth) {
+    private fun logIn(auth: FirebaseAuth, deviseUserToken: String) {
         if (checkForEmailMatch() && checkForPasswordMatchSingIn()) {
             auth.signInWithEmailAndPassword(
                 email.value.toString(),
@@ -176,12 +184,12 @@ class AuthViewModel @Inject constructor() : ViewModel() {
                     // запустить прогресс бар
                     changeVisibilityAtProgress()
 
-                    taskResultLogIn(task)
+                    taskResultLogIn(task, deviseUserToken)
                 }
         }
     }
 
-    private fun signUp(auth: FirebaseAuth) {
+    private fun signUp(auth: FirebaseAuth, deviseUserToken: String) {
         if (checkForEmailMatch() &&
             checkForPasswordsMatchSingUp() &&
             checkForUserNameEnter()
@@ -195,8 +203,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
                     changeVisibilityAtProgress()
 
                     setName(auth)
-                    taskResultSingUp(task)
-
+                    taskResultSingUp(task, deviseUserToken)
                 }
         }
     }
@@ -229,13 +236,17 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    private fun taskResultSingUp(task: Task<AuthResult>) {
+    private fun taskResultSingUp(task: Task<AuthResult>, deviseUserToken: String) {
         when {
             task.isSuccessful -> {
                 val currentUser = auth.currentUser
-                if (currentUser != null && userListRef.key?.contains(currentUser.uid) != true) {
-                    val user = User(currentUser.uid, currentUser.email, userName.value.toString())
-                    userListRef.child(currentUser.uid).setValue(user)
+                if (currentUser != null) {
+                    if (userListRef.key?.contains(currentUser.uid) != true) {
+                        val user = User(currentUser.uid, currentUser.email, userName.value.toString(), notificationTokens = listOf(deviseUserToken))
+                        userListRef.child(currentUser.uid).setValue(user)
+                    } else {
+                        updateDBUserToken(currentUser, deviseUserToken)
+                    }
                 }
             }
             task.exception is Exception -> {
@@ -246,15 +257,33 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    private fun taskResultLogIn(task: Task<AuthResult>) {
+    private fun taskResultLogIn(task: Task<AuthResult>, deviseUserToken: String) {
         when {
             task.isSuccessful -> {
+                val currentUser = auth.currentUser
+                if (currentUser != null) {
+                    updateDBUserToken(currentUser, deviseUserToken)
+                }
                 _isOpenChatByUser.value = true
             }
             task.exception is Exception -> {
                 task.exception?.localizedMessage?.let { message ->
                     _exceptionMessageForUser.value = message
                 }
+            }
+        }
+    }
+
+    private fun updateDBUserToken(currentUser: FirebaseUser, deviseUserToken: String) {
+        userListRef.child(currentUser.uid).child("notificationTokens").get().addOnSuccessListener {
+            val dbUserToken: MutableList<String> = mutableListOf()
+            it.children.forEach { notificationToken ->
+                notificationToken.getValue(String::class.java)?.let { token -> dbUserToken.add(token) }
+            }
+            if (dbUserToken.isEmpty() || !dbUserToken.contains(deviseUserToken)) {
+                dbUserToken.add(deviseUserToken)
+                val user = User(currentUser.uid, currentUser.email, currentUser.displayName, notificationTokens = dbUserToken)
+                userListRef.child(currentUser.uid).setValue(user)
             }
         }
     }
@@ -273,10 +302,6 @@ class AuthViewModel @Inject constructor() : ViewModel() {
 
     private fun checkForWatcherConfirmPassword(password: String, confirmPassword: String): Boolean {
         return password == confirmPassword
-    }
-
-    companion object {
-        const val USER_LIST_PATH = "UserList"
     }
 
 }

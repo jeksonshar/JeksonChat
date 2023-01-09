@@ -17,5 +17,9 @@
     <style name="SendMessageStyle" >
         <item name="android:background">@color/background_send_message_gray_dark</item>
     </style>
+    
+    <style name="VideoCallIconStyle">
+        <item name="android:tint">@color/gray_light</item>
+    </style>
 
 </resources>

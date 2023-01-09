@@ -4,8 +4,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.jeksonchat.business.domain.models.Message
 import com.example.jeksonchat.business.domain.singletons.UserCompanionSingleton
+import com.example.jeksonchat.datasource.NotificationsApiService
+import com.example.jeksonchat.datasource.network.entities.Data
+import com.example.jeksonchat.datasource.network.entities.FirebaseNotification
+import com.example.jeksonchat.utils.MESSAGE_LIST_PATH
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -13,18 +18,23 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 import java.util.*
+import javax.inject.Inject
 
-class ChatWithUserViewModel : ViewModel() {
+@HiltViewModel
+class ChatWithUserViewModel @Inject constructor(
+    private val apiService: NotificationsApiService
+) : ViewModel() {
 
     private var _messageText = MutableLiveData<CharSequence?>()
     val messageText: LiveData<CharSequence?> = _messageText
 
     private var _messageList = MutableLiveData<List<Message>>()
     val messageList: LiveData<List<Message>> = _messageList
-
 
 
     private val userCompanion = UserCompanionSingleton.userCompanion
@@ -77,11 +87,25 @@ class ChatWithUserViewModel : ViewModel() {
             val newMessageId = newMessageId()
             messageListRef.push().setValue(Message(user?.uid, userCompanion?.userId, messageText.value.toString(), messageTime, newMessageId))
                 .addOnSuccessListener {
+                    sendNotification()
                     _messageText.value = null
-
                 }.addOnFailureListener {
                     // TODO передать пользователю, что сообщение не отправлено
                 }
+        }
+    }
+
+    private fun sendNotification() {
+        viewModelScope.launch {
+            val notificationEntity = FirebaseNotification(
+                Data(
+                    recipientId = userCompanion?.userId,
+                    senderId = user?.uid,
+                    title = user?.displayName,
+                    body = messageText.value.toString()
+                ), registrationIds = userCompanion?.notificationTokens
+            )
+            apiService.sendNotifications(notificationEntity)
         }
     }
 
@@ -99,10 +123,6 @@ class ChatWithUserViewModel : ViewModel() {
     override fun onCleared() {
         UserCompanionSingleton.clear()
         super.onCleared()
-    }
-
-    companion object {
-        const val MESSAGE_LIST_PATH = "MessageList"
     }
 
 }

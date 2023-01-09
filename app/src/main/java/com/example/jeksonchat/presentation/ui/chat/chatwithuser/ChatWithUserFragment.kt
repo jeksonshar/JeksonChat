@@ -8,9 +8,12 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.jeksonchat.databinding.FragmentChatWithUserBinding
 import com.example.jeksonchat.presentation.ui.chat.ChatActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ChatWithUserFragment : Fragment() {
 
     private var _binding: FragmentChatWithUserBinding? = null
@@ -33,6 +36,10 @@ class ChatWithUserFragment : Fragment() {
 
         toolbar = (requireActivity() as ChatActivity).toolbar
 
+        (requireActivity() as ChatActivity).binding.ivVideoCall.setOnClickListener {
+            findNavController().navigate(ChatWithUserFragmentDirections.actionChatWithUserFragmentToVideoCallingFragment())
+        }
+
         return binding.root
     }
 
@@ -50,6 +57,7 @@ class ChatWithUserFragment : Fragment() {
             adapter.submitList(it)
 //            TODO это кастыль, разобраться почему не обновляет без него (notifyDataSetChanged())
             adapter.notifyDataSetChanged()
+            binding.rvChatMessages.scrollToPosition(it.size-1)
         }
     }
 

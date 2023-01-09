@@ -130,7 +130,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:visibility="@{vm.isSignUpPage ? View.VISIBLE : View.GONE}"
-            app:error='@{vm.etConfirmPasswordError ? @string/value_not_match_password : ""}'
+            app:error='@{vm.etConfirmPasswordError ? @string/passwords_does_not_match : ""}'
             app:errorEnabled="true"
             app:errorIconDrawable="@null"
             app:layout_constraintBottom_toTopOf="@+id/btnSignIn"
